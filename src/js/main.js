@@ -19,11 +19,14 @@ let player = {
 	y: 100,
 	width: 0,
 	height: 0,
+	lastTimeFiredFireball: 0,
 };
 
 let game = {
 	speed: 3,
 	movingMultiplier: 4,
+	fireballMultiplier: 5,
+	fireInterval: 300,
 };
 
 let scene = {
@@ -59,9 +62,10 @@ function onGameStart() {
 }
 
 //* game loop function
-function gameAction() {
+function gameAction(timestamp) {
 	const wizard = document.querySelector('.wizard');
 
+	console.log(timestamp);
 	//* apply gravitation
 	let isInAir = player.y + player.height <= gameArea.offsetHeight;
 	if (isInAir) {
@@ -87,14 +91,26 @@ function gameAction() {
 	}
 
 	//* wizard fireball key
-	if (keys.Space) {
+	if (keys.Space && timestamp - player.lastTimeFiredFireball > game.fireInterval) {
 		wizard.classList.add('wizard-fire');
 		addFireball(player);
+		player.lastTimeFiredFireball = timestamp;
 	} else {
 		wizard.classList.remove('wizard-fire');
 	}
 
-	//* apply movement
+	//* modify fireball position
+	let fireballs = document.querySelectorAll('.fireball');
+	fireballs.forEach(fball => {
+		fball.x += game.speed * game.fireballMultiplier;
+		fball.style.left = fball.x + 'px';
+
+		if (fball.x + fball.offsetWidth > gameArea.offsetWidth) {
+			fball.parentElement.removeChild(fball);
+		}
+	});
+
+	//* apply wizard's movement
 	wizard.style.top = player.y + 'px';
 	wizard.style.left = player.x + 'px';
 
@@ -110,7 +126,8 @@ function addFireball(player) {
 
 	fireball.classList.add('fireball');
 	fireball.style.top = player.y + player.height / 3 - 5 + 'px';
-	fireball.style.left = player.x + player.width + 'px';
+	fireball.x = player.x + player.width;
+	fireball.style.left = fireball.x + 'px';
 
 	gameArea.appendChild(fireball);
 }
