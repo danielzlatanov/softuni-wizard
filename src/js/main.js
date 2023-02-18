@@ -2,6 +2,7 @@ const gameStart = document.querySelector('.game-start');
 const gameScore = document.querySelector('.game-score');
 const gameArea = document.querySelector('.game-area');
 const gameOver = document.querySelector('.game-over');
+const gamePoints = document.querySelector('.points');
 
 gameStart.addEventListener('click', onGameStart);
 document.addEventListener('keydown', onKeyDown);
@@ -19,6 +20,10 @@ let player = {
 let game = {
 	speed: 3,
 	movingMultiplier: 4,
+};
+
+let scene = {
+	score: 0,
 };
 
 function onKeyDown(e) {
@@ -73,6 +78,9 @@ function gameAction() {
 
 	wizard.style.top = player.y + 'px';
 	wizard.style.left = player.x + 'px';
+
+	scene.score++;
+	gamePoints.textContent = scene.score;
 
 	window.requestAnimationFrame(gameAction);
 }
