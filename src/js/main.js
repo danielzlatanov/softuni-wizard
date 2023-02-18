@@ -49,10 +49,19 @@ function onGameStart() {
 function gameAction() {
 	const wizard = document.querySelector('.wizard');
 
+	let isInAir = player.y + player.height <= gameArea.offsetHeight;
+	if (isInAir) {
+		player.y += game.speed;
+	}
+
 	if ((keys.ArrowUp || keys.KeyW) && player.y > 0) {
 		player.y -= game.speed * game.movingMultiplier;
 	}
-	if ((keys.ArrowDown || keys.KeyS) && player.y + player.height < gameArea.offsetHeight) {
+	if (
+		(keys.ArrowDown || keys.KeyS) &&
+		player.y + player.height < gameArea.offsetHeight &&
+		isInAir
+	) {
 		player.y += game.speed * game.movingMultiplier;
 	}
 	if ((keys.ArrowLeft || keys.KeyA) && player.x > 0) {
