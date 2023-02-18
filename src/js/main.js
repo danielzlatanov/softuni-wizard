@@ -3,10 +3,16 @@ const gameStart = document.querySelector('.game-start');
 const gameScore = document.querySelector('.game-score');
 const gameArea = document.querySelector('.game-area');
 const gameOver = document.querySelector('.game-over');
+const gameStartOver = document.querySelector('.game-start-over');
 const gamePoints = document.querySelector('.points');
 
 //* game start listener
 gameStart.addEventListener('click', onGameStart);
+
+//* start over listener
+gameStartOver.addEventListener('click', () => {
+	location.reload();
+});
 
 //* global key listeners
 document.addEventListener('keydown', onKeyDown);
@@ -26,9 +32,9 @@ let game = {
 	speed: 3,
 	movingMultiplier: 4,
 	fireballMultiplier: 5,
-	fireInterval: 300,
+	fireInterval: 500,
 	cloudSpawnInterval: 3000,
-	bugSpawnInterval: 1000,
+	bugSpawnInterval: 800,
 	bugKillBonus: 2000,
 };
 
@@ -69,7 +75,7 @@ function onGameStart() {
 function gameAction(timestamp) {
 	const wizard = document.querySelector('.wizard');
 
-	//* apply gravitation
+	//* apply gravitation to wizard
 	let isInAir = player.y + player.height <= gameArea.offsetHeight;
 	if (isInAir) {
 		player.y += game.speed;
@@ -91,11 +97,13 @@ function gameAction(timestamp) {
 	if ((keys.ArrowRight || keys.KeyD) && keyRightBoundary) {
 		player.x += game.speed * game.movingMultiplier;
 	}
-	//* wizard fireball key
+
+	//* register wizard fireball key
 	if (keys.Space && timestamp - player.lastTimeFiredFireball > game.fireInterval) {
 		wizard.classList.add('wizard-fire');
 		addFireball(player);
 		player.lastTimeFiredFireball = timestamp;
+
 		isCollision(wizard, wizard);
 	} else {
 		wizard.classList.remove('wizard-fire');
@@ -127,11 +135,12 @@ function gameAction(timestamp) {
 		cloud.x = gameArea.offsetWidth - 200;
 		cloud.style.left = cloud.x + 'px';
 		cloud.style.top = (gameArea.offsetHeight - 200) * Math.random() + 'px';
+
 		gameArea.appendChild(cloud);
 		scene.lastCloudSpawn = timestamp;
 	}
 
-	//* modify cloud position
+	//* modify clouds position
 	let clouds = document.querySelectorAll('.cloud');
 	clouds.forEach(cloud => {
 		cloud.x -= game.speed;
@@ -149,6 +158,7 @@ function gameAction(timestamp) {
 		bug.x = gameArea.offsetWidth - 60;
 		bug.style.left = bug.x + 'px';
 		bug.style.top = (gameArea.offsetHeight - 60) * Math.random() + 'px';
+
 		gameArea.appendChild(bug);
 		scene.lastBugSpawn = timestamp;
 	}
@@ -164,7 +174,7 @@ function gameAction(timestamp) {
 		}
 	});
 
-	//* detect collision
+	//* detect collision - (wizard-bug), (fireball-bug)
 	bugs.forEach(bug => {
 		if (isCollision(wizard, bug)) {
 			gameOverAction();
@@ -184,7 +194,7 @@ function gameAction(timestamp) {
 	}
 }
 
-//* create fireball function
+//* shoot fireball function
 function addFireball(player) {
 	let fireball = document.createElement('div');
 
@@ -213,4 +223,5 @@ function isCollision(firstElement, secondElement) {
 function gameOverAction() {
 	scene.isActiveGame = false;
 	gameOver.classList.remove('hide');
+	gameStartOver.classList.remove('hide');
 }
