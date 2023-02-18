@@ -20,7 +20,7 @@ body {
     background-color: rgb(235, 253, 153);
     border-radius: 30px;
     top: 200px;
-    left: 35%;
+    left: 33%;
     z-index: 1;
     text-align: center;
     padding: 30px;
@@ -31,6 +31,18 @@ body {
     background-color: black;
     color: white;
     text-align: center;
+}
+
+.game-over {
+    position: absolute;
+    width: 30%;
+    background-color: red;
+    border-radius: 30px;
+    top: 100px;
+    left: 33%;
+    z-index: 1;
+    text-align: center;
+    padding: 30px;
 }
 
 .hide {

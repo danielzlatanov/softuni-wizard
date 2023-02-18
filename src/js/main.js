@@ -35,16 +35,15 @@ let scene = {
 	score: 0,
 	lastCloudSpawn: 0,
 	lastBugSpawn: 0,
+	isActiveGame: true,
 };
 
 //* key handlers
 function onKeyDown(e) {
 	keys[e.code] = true;
-	console.log(keys);
 }
 function onKeyUp(e) {
 	keys[e.code] = false;
-	console.log(keys);
 }
 
 //* game start function
@@ -96,6 +95,7 @@ function gameAction(timestamp) {
 		wizard.classList.add('wizard-fire');
 		addFireball(player);
 		player.lastTimeFiredFireball = timestamp;
+		isCollision(wizard, wizard);
 	} else {
 		wizard.classList.remove('wizard-fire');
 	}
@@ -163,9 +163,19 @@ function gameAction(timestamp) {
 		}
 	});
 
-	window.requestAnimationFrame(gameAction);
+	//* detect collision
+	bugs.forEach(bug => {
+		if (isCollision(wizard, bug)) {
+			gameOverAction();
+		}
+	});
+
+	if (scene.isActiveGame) {
+		window.requestAnimationFrame(gameAction);
+	}
 }
 
+//* create fireball function
 function addFireball(player) {
 	let fireball = document.createElement('div');
 
@@ -175,4 +185,23 @@ function addFireball(player) {
 	fireball.style.left = fireball.x + 'px';
 
 	gameArea.appendChild(fireball);
+}
+
+//* collision detection function
+function isCollision(firstElement, secondElement) {
+	let firstRect = firstElement.getBoundingClientRect();
+	let secondRect = secondElement.getBoundingClientRect();
+
+	return !(
+		firstRect.top > secondRect.bottom ||
+		firstRect.bottom < secondRect.top ||
+		firstRect.right < secondRect.left ||
+		firstRect.left > secondRect.right
+	);
+}
+
+//* game over function
+function gameOverAction() {
+	scene.isActiveGame = false;
+	gameOver.classList.remove('hide');
 }
