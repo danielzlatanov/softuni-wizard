@@ -27,10 +27,12 @@ let game = {
 	movingMultiplier: 4,
 	fireballMultiplier: 5,
 	fireInterval: 300,
+	cloudSpawnInterval: 3000,
 };
 
 let scene = {
 	score: 0,
+	lastCloudSpawn: 0,
 };
 
 //* key handlers
@@ -65,31 +67,28 @@ function onGameStart() {
 function gameAction(timestamp) {
 	const wizard = document.querySelector('.wizard');
 
-	console.log(timestamp);
 	//* apply gravitation
 	let isInAir = player.y + player.height <= gameArea.offsetHeight;
 	if (isInAir) {
 		player.y += game.speed;
 	}
 
+	let keyDownBoundary = player.y + player.height < gameArea.offsetHeight;
+	let keyRightBoundary = player.x + player.width < gameArea.offsetWidth;
+
 	//* register user input
 	if ((keys.ArrowUp || keys.KeyW) && player.y > 0) {
 		player.y -= game.speed * game.movingMultiplier;
 	}
-	if (
-		(keys.ArrowDown || keys.KeyS) &&
-		player.y + player.height < gameArea.offsetHeight &&
-		isInAir
-	) {
+	if ((keys.ArrowDown || keys.KeyS) && keyDownBoundary && isInAir) {
 		player.y += game.speed * game.movingMultiplier;
 	}
 	if ((keys.ArrowLeft || keys.KeyA) && player.x > 0) {
 		player.x -= game.speed * game.movingMultiplier;
 	}
-	if ((keys.ArrowRight || keys.KeyD) && player.x + player.width < gameArea.offsetWidth) {
+	if ((keys.ArrowRight || keys.KeyD) && keyRightBoundary) {
 		player.x += game.speed * game.movingMultiplier;
 	}
-
 	//* wizard fireball key
 	if (keys.Space && timestamp - player.lastTimeFiredFireball > game.fireInterval) {
 		wizard.classList.add('wizard-fire');
@@ -98,6 +97,14 @@ function gameAction(timestamp) {
 	} else {
 		wizard.classList.remove('wizard-fire');
 	}
+
+	//* increment and apply score count
+	scene.score++;
+	gamePoints.textContent = scene.score;
+
+	//* apply wizard's movement
+	wizard.style.top = player.y + 'px';
+	wizard.style.left = player.x + 'px';
 
 	//* modify fireball position
 	let fireballs = document.querySelectorAll('.fireball');
@@ -110,13 +117,27 @@ function gameAction(timestamp) {
 		}
 	});
 
-	//* apply wizard's movement
-	wizard.style.top = player.y + 'px';
-	wizard.style.left = player.x + 'px';
+	//* add clouds
+	if (timestamp - scene.lastCloudSpawn > game.cloudSpawnInterval + 20000 * Math.random()) {
+		let cloud = document.createElement('div');
+		cloud.classList.add('cloud');
+		cloud.x = gameArea.offsetWidth - 200;
+		cloud.style.left = cloud.x + 'px';
+		cloud.style.top = (gameArea.offsetHeight - 200) * Math.random() + 'px';
+		gameArea.appendChild(cloud);
+		scene.lastCloudSpawn = timestamp;
+	}
 
-	//* increment and apply score count
-	scene.score++;
-	gamePoints.textContent = scene.score;
+	//* modify cloud position
+	let clouds = document.querySelectorAll('.cloud');
+	clouds.forEach(cloud => {
+		cloud.x -= game.speed;
+		cloud.style.left = cloud.x + 'px';
+
+		if (cloud.x + clouds.offsetWidth <= 0) {
+			cloud.parentElement.removeChild(cloud);
+		}
+	});
 
 	window.requestAnimationFrame(gameAction);
 }
