@@ -29,6 +29,7 @@ let game = {
 	fireInterval: 300,
 	cloudSpawnInterval: 3000,
 	bugSpawnInterval: 1000,
+	bugKillBonus: 2000,
 };
 
 let scene = {
@@ -168,6 +169,14 @@ function gameAction(timestamp) {
 		if (isCollision(wizard, bug)) {
 			gameOverAction();
 		}
+
+		fireballs.forEach(fball => {
+			if (isCollision(fball, bug)) {
+				scene.score += game.bugKillBonus;
+				bug.parentElement.removeChild(bug);
+				fball.parentElement.removeChild(fball);
+			}
+		});
 	});
 
 	if (scene.isActiveGame) {
