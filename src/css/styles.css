@@ -1,5 +1,34 @@
-h1{
-    font-size: 50px;
-    display: inline-block;
-    color: purple;
+body {
+    font-size: 32px;
+    font-family: Consolas, "Courier New", monospace;
+}
+
+.game-area {
+    position: relative;
+    background: rgb(61, 160, 244);
+    background: linear-gradient(0deg, rgba(61, 160, 244, 1), 0%,
+            rgba(192, 221, 246, 1) 33%,
+            rgba(55, 157, 244, 1) 100%);
+    width: 100%;
+    height: 98vh;
+    margin:0;   
+}
+
+.game-start {
+    position: absolute;
+    width: 30%;
+    background-color: rgb(235, 253, 153);
+    border-radius: 30px;
+    top: 200px;
+    left: 35%;
+    z-index: 1;
+    text-align: center;
+    padding: 30px;
+    cursor: pointer;
+}
+
+.game-score {
+    background-color: black;
+    color: white;
+    text-align: center;
 }
