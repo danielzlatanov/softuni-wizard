@@ -8,12 +8,17 @@ document.addEventListener('keydown', onKeyDown);
 document.addEventListener('keyup', onKeyUp);
 
 let keys = {};
+
 let player = {
 	x: 150,
 	y: 100,
+	width: 0,
+	height: 0,
 };
+
 let game = {
-	speed: 5,
+	speed: 3,
+	movingMultiplier: 4,
 };
 
 function onKeyDown(e) {
@@ -26,28 +31,6 @@ function onKeyUp(e) {
 	console.log(keys);
 }
 
-function gameAction() {
-	const wizard = document.querySelector('.wizard');
-
-	if (keys.ArrowUp || keys.KeyW) {
-		player.y -= game.speed;
-	}
-	if (keys.ArrowDown || keys.KeyS) {
-		player.y += game.speed;
-	}
-	if (keys.ArrowLeft || keys.KeyA) {
-		player.x -= game.speed;
-	}
-	if (keys.ArrowRight || keys.KeyD) {
-		player.x += game.speed;
-	}
-
-	wizard.style.top = player.y + 'px';
-	wizard.style.left = player.x + 'px';
-
-	window.requestAnimationFrame(gameAction);
-}
-
 function onGameStart() {
 	gameStart.classList.add('hide');
 
@@ -56,6 +39,31 @@ function onGameStart() {
 	wizard.style.top = player.y + 'px';
 	wizard.style.left = player.x + 'px';
 	gameArea.appendChild(wizard);
+
+	player.width = wizard.offsetWidth;
+	player.height = wizard.offsetHeight;
+
+	window.requestAnimationFrame(gameAction);
+}
+
+function gameAction() {
+	const wizard = document.querySelector('.wizard');
+
+	if ((keys.ArrowUp || keys.KeyW) && player.y > 0) {
+		player.y -= game.speed * game.movingMultiplier;
+	}
+	if ((keys.ArrowDown || keys.KeyS) && player.y + player.height < gameArea.offsetHeight) {
+		player.y += game.speed * game.movingMultiplier;
+	}
+	if ((keys.ArrowLeft || keys.KeyA) && player.x > 0) {
+		player.x -= game.speed * game.movingMultiplier;
+	}
+	if ((keys.ArrowRight || keys.KeyD) && player.x + player.width < gameArea.offsetWidth) {
+		player.x += game.speed * game.movingMultiplier;
+	}
+
+	wizard.style.top = player.y + 'px';
+	wizard.style.left = player.x + 'px';
 
 	window.requestAnimationFrame(gameAction);
 }
