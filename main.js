@@ -32,7 +32,7 @@ let game = {
 	speed: 3,
 	movingMultiplier: 4,
 	fireballMultiplier: 5,
-	fireInterval: 500,
+	fireInterval: 400,
 	cloudSpawnInterval: 3000,
 	bugSpawnInterval: 800,
 	bugKillBonus: 2000,
