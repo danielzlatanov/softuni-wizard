@@ -1,5 +1,6 @@
 //* select game screens
 const gameStart = document.querySelector('.game-start');
+const gameControlsInfo = document.querySelector('.game-controls-info');
 const gameScore = document.querySelector('.game-score');
 const gameArea = document.querySelector('.game-area');
 const gameOver = document.querySelector('.game-over');
@@ -56,6 +57,7 @@ function onKeyUp(e) {
 //* game start function
 function onGameStart() {
 	gameStart.classList.add('hide');
+	gameControlsInfo.classList.add('hide');
 
 	//* render wizard
 	const wizard = document.createElement('div');

@@ -17,7 +17,7 @@ body {
 .game-start {
     position: absolute;
     width: 30%;
-    background-color: rgb(235, 253, 153);
+    background-color: rgb(250, 201, 39);
     border-radius: 30px;
     top: 200px;
     left: 33%;
@@ -25,6 +25,18 @@ body {
     text-align: center;
     padding: 30px;
     cursor: pointer;
+}
+
+.game-controls-info {
+    position: absolute;
+    width: 30%;
+    background-color: rgb(226, 249, 122);
+    border-radius: 30px;
+    top: 330px;
+    left: 33%;
+    z-index: 1;
+    text-align: center;
+    padding: 30px;
 }
 
 .game-score {
