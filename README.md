@@ -1,5 +1,7 @@
 # SoftUni Wizard Game
 
+https://github.com/danielzlatanov/softuni-wizard/assets/110429874/5570e21c-5535-4a9d-82ae-f408683dd827
+
 **Play the game online:** [SoftUni Wizard Game](https://danielzlatanov.github.io/softuni-wizard/)
 
 ## Description
@@ -55,7 +57,7 @@ The game logic is written in JavaScript and controls various aspects of the game
 
 **These game mechanics combine to create an engaging and challenging experience.**
 
-### Game Screens and Elements
+## Game Screens and Elements
 
 The game logic identifies different game screens and elements using DOM selectors. These include:
 
